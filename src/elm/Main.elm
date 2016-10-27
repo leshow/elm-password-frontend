@@ -4,6 +4,9 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.App as Html
 import Html.Events exposing (onClick)
+import Http
+import Task
+import Json.Decode as Json exposing ((:=))
 
 
 -- APP
@@ -24,12 +27,12 @@ subs model =
 
 
 type alias Model =
-    Int
+    { mnemonic : String, wordCount : Maybe Int }
 
 
 model : ( Model, Cmd Msg )
 model =
-    0 ! []
+    { mnemonic = "", wordCount = Nothing } ! []
 
 
 
@@ -38,7 +41,9 @@ model =
 
 type Msg
     = NoOp
-    | Increment
+    | GetMnemonic
+    | FetchSuccess String
+    | FetchFail Http.Error
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -47,8 +52,47 @@ update msg model =
         NoOp ->
             model ! []
 
-        Increment ->
-            (model + 1) ! []
+        GetMnemonic ->
+            ( model, getMnemonic model )
+
+        FetchSuccess pw ->
+            ( { model | mnemonic = pw }, Cmd.none )
+
+        FetchFail _ ->
+            ( model, Cmd.none )
+
+
+api : String
+api =
+    "localhost:3000/password/"
+
+
+buildUrl : Maybe Int -> String
+buildUrl words =
+    case words of
+        Just wc ->
+            api ++ (toString wc)
+
+        Nothing ->
+            api
+
+
+getMnemonic : Model -> Cmd Msg
+getMnemonic model =
+    let
+        url =
+            buildUrl model.wordCount
+    in
+        Task.perform FetchFail FetchSuccess (Http.get responseDecoder api)
+
+
+responseDecoder : Json.Decoder String
+responseDecoder =
+    Json.at [ "password" ] Json.string
+
+
+
+-- VIEW
 
 
 view : Model -> Html Msg
@@ -84,7 +128,7 @@ hero model =
             [ div [ class "col-xs-12" ]
                 [ div [ class "jumbotron" ]
                     [ p [] [ text ("Elm/Rust Password Generator") ]
-                    , msgButton Increment
+                    , msgButton GetMnemonic
                     ]
                 ]
             ]
