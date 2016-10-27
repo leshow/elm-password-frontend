@@ -1,12 +1,12 @@
 {
-  "name": "elm-webpack-starter",
-  "description": "Webpack setup for writing Elm apps",
-  "version": "0.7.1",
+  "name": "elm-pass-server",
+  "description": "Elm frontend for my Rust password-server",
+  "version": "0.1.0",
   "license": "MIT",
-  "author": "Peter Morawiec",
+  "author": "Evan Cameron",
   "repository": {
     "type": "git",
-    "url": "https://github.com/moarwick/elm-webpack-starter"
+    "url": "https://github.com/leshow/elm-pass-server"
   },
   "scripts": {
     "start": "webpack-dev-server --hot --inline --content-base src/",
@@ -24,7 +24,8 @@
     "extract-text-webpack-plugin": "^1.0.1",
     "file-loader": "^0.9.0",
     "html-webpack-plugin": "^2.17.0",
-    "jquery": "^3.1.0",
+    "material-design-icons": "^3.0.1",
+    "material-design-lite": "^1.2.1",
     "node-sass": "^3.7.0",
     "postcss-loader": "^0.10.1",
     "rimraf": "^2.5.2",

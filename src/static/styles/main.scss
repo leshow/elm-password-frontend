@@ -1,5 +1,12 @@
-$icon-font-path: '~bootstrap-sass/assets/fonts/bootstrap/';
-@import '~bootstrap-sass/assets/stylesheets/bootstrap/_mixins.scss';
-@import '~bootstrap-sass/assets/stylesheets/_bootstrap.scss';
+// $icon-font-path: '~bootstrap-sass/assets/fonts/bootstrap/';
+// @import '~bootstrap-sass/assets/stylesheets/bootstrap/_mixins.scss';
+// @import '~bootstrap-sass/assets/stylesheets/_bootstrap.scss';
+@import "~material-design-lite/src/color-definitions";
+@import "~material-design-lite/src/material-design-lite-grid.scss";
+@import "~material-design-lite/src/material-design-lite.scss";
 
-// can add Boostrap overrides, additional Sass/CSS below...
+@import "./font";
+
+$color-primary: $palette-indigo-500 !default;
+$color-primary-dark: $palette-indigo-700 !default;
+$color-accent: $palette-pink-A200 !default;

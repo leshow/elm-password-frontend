@@ -1,63 +1,107 @@
+module Main exposing (..)
+
+import Html.App as App
 import Html exposing (..)
-import Html.Attributes exposing (..)
-import Html.App as Html
-import Html.Events exposing ( onClick )
-
--- component import example
-import Components.Hello exposing ( hello )
-
-
--- APP
-main : Program Never
-main =
-  Html.beginnerProgram { model = model, view = view, update = update }
+import Html.Attributes exposing (href, class, style)
+import Material
+import Material.Button as Button
+import Material.Menu as Menu
+import Material.Icon as Icon
+import Material.Options exposing (css)
 
 
 -- MODEL
-type alias Model = Int
-
-model : number
-model = 0
 
 
--- UPDATE
-type Msg = NoOp | Increment
+type alias Model =
+    { count : Int
+    , mdl :
+        Material.Model
+        -- Boilerplate: model store for any and all Mdl components you use.
+    }
 
-update : Msg -> Model -> Model
+
+model : Model
+model =
+    { count = 0
+    , mdl =
+        Material.model
+        -- Boilerplate: Always use this initial Mdl model store.
+    }
+
+
+
+-- ACTION, UPDATE
+
+
+type Msg
+    = Increase
+    | Reset
+    | Mdl (Material.Msg Msg)
+
+
+
+-- Boilerplate: Msg clause for internal Mdl messages.
+
+
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-  case msg of
-    NoOp -> model
-    Increment -> model + 1
+    case msg of
+        Increase ->
+            ( { model | count = model.count + 1 }
+            , Cmd.none
+            )
+
+        Reset ->
+            ( { model | count = 0 }
+            , Cmd.none
+            )
+
+        -- Boilerplate: Mdl action handler.
+        Mdl msg' ->
+            Material.update msg' model
+
 
 
 -- VIEW
--- Html is defined as: elem [ attribs ][ children ]
--- CSS can be applied via class names or inline style attrib
+
+
+type alias Mdl =
+    Material.Model
+
+
 view : Model -> Html Msg
 view model =
-  div [ class "container", style [("margin-top", "30px"), ( "text-align", "center" )] ][    -- inline CSS (literal)
-    div [ class "row" ][
-      div [ class "col-xs-12" ][
-        div [ class "jumbotron" ][
-          img [ src "static/img/elm.jpg", style styles.img ] []                                    -- inline CSS (via var)
-          , hello model                                                                     -- ext 'hello' component (takes 'model' as arg)
-          , p [] [ text ( "Elm Webpack Starter" ) ]
-          , button [ class "btn btn-primary btn-lg", onClick Increment ] [                  -- click handler
-            span[ class "glyphicon glyphicon-star" ][]                                      -- glyphicon
-            , span[][ text "FTW!" ]
-          ]
+    div []
+        [ Menu.render Mdl
+            [ 0 ]
+            model.mdl
+            [ Menu.ripple, Menu.bottomLeft ]
+            [ Menu.item
+                [ Menu.onSelect Increase ]
+                [ text "English (US)" ]
+            , Menu.item
+                [ Menu.onSelect Reset ]
+                [ text "français" ]
+            ]
+        , Button.render
+            Mdl
+            [ 0 ]
+            model.mdl
+            [ Button.fab
+            , Button.colored
+            , Button.ripple
+            , Button.onClick Increase
+            ]
+            [ Icon.i "add" ]
         ]
-      ]
-    ]
-  ]
 
 
--- CSS STYLES
-styles : { img : List ( String, String ) }
-styles =
-  {
-    img =
-      [ ( "width", "33%" )
-      , ( "border", "4px solid #337AB7")
-      ]
-  }
+main : Program Never
+main =
+    App.program
+        { init = ( model, Cmd.none )
+        , view = view
+        , subscriptions = always Sub.none
+        , update = update
+        }
