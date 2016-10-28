@@ -7,6 +7,7 @@ import Html.Events exposing (onClick)
 import Http
 import Task
 import Json.Decode as Json exposing ((:=))
+import String
 
 
 -- APP
@@ -127,7 +128,22 @@ hero model =
                     ]
                 ]
             ]
+        , passview model
         ]
+
+
+passview : Model -> Html Msg
+passview model =
+    if ((String.length model.mnemonic) > 0) then
+        div [ class "row" ]
+            [ div [ class "col-xs-12" ]
+                [ div [ class "jumbotron h1" ]
+                    [ text (model.mnemonic)
+                    ]
+                ]
+            ]
+    else
+        Html.text ""
 
 
 msgButton : Msg -> Html Msg
