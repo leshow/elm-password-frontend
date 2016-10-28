@@ -64,7 +64,7 @@ update msg model =
 
 api : String
 api =
-    "localhost:3000/password/"
+    "http://localhost:3000/passphrase"
 
 
 buildUrl : Maybe Int -> String
@@ -88,7 +88,7 @@ getMnemonic model =
 
 responseDecoder : Json.Decoder String
 responseDecoder =
-    Json.at [ "password" ] Json.string
+    Json.at [ "passphrase" ] Json.string
 
 
 
